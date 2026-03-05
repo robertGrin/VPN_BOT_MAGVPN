@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  bot:
+    build: .
+    container_name: vpn_telegram_bot
+    restart: unless-stopped
+    environment:                 
+      - TZ=Europe/Moscow         
+    depends_on:
+      - redis
+    volumes:
+      - ./db:/app/db
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  redis:
+    image: redis:alpine
+    container_name: vpn_redis
+    restart: unless-stopped
+    environment:                
+      - TZ=Europe/Moscow        
+    volumes:
+      - redis_data:/data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  redis_data:
